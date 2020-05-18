@@ -1,0 +1,7 @@
+version: '3.2'
+services:
+  key-cloack-graddle:
+    image: "testlocal/key-cloack-graddle:0.0.1"
+    tty: true
+    ports:
+     - "8081:8081"

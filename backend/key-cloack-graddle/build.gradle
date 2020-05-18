@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+
+	id 'net.ltgt.apt' version '0.21'
+	id 'com.palantir.docker' version '0.22.1'
+}
+
+group = 'com.example'
+version = '0.0.1'
+sourceCompatibility = '1.11'
+
+repositories {
+	mavenCentral()
+}
+
+//dependencyManagement {
+//	imports {
+//		mavenBom "org.keycloak.bom:keycloak-adapter-bom:10.0.1"
+//	}
+//}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+//	implementation 'org.keycloak:keycloak-spring-boot-starter'
+}
+
+
+docker {
+	dependsOn bootJar
+	name "testlocal/${rootProject.name}:${project.version}"
+	files bootJar.archiveFile
+	dockerfile file('./docker/Dockerfile')
+	buildArgs(['JAR_FILE': "${bootJar.archiveFileName.get()}"])
+}
+
+
+test {
+	useJUnitPlatform()
+}
